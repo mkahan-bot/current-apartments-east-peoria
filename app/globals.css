@@ -197,6 +197,11 @@ img { display: block; max-width: 100%; }
 .form-success h3 { margin: 22px 0 8px; font-family: var(--serif); font-size: 44px; font-weight: 400; }
 .form-success p { max-width: 420px; margin: 0 0 26px; color: var(--muted); line-height: 1.7; }
 
+.ask-katie-grid { width: min(1120px,100%); margin: 0 auto; display: grid; grid-template-columns: minmax(0,.9fr) minmax(0,1.1fr); gap: clamp(32px,5vw,72px); align-items: center; }
+.ask-katie .fine a { color: var(--ocean); font-weight: 700; }
+.ask-katie-card { display: block; width: 100%; }
+.ask-katie-card .form-success { min-height: 520px; }
+
 footer { padding: 76px clamp(24px,6vw,92px) 28px; color: #9ab7ba; background: var(--navy-deep); }
 .footer-grid { width: min(1400px,100%); margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1.4fr; gap: 42px; }
 .footer-grid > div:first-child p { max-width: 360px; margin-top: 22px; line-height: 1.7; }
@@ -221,6 +226,7 @@ footer { padding: 76px clamp(24px,6vw,92px) 28px; color: #9ab7ba; background: va
   .amenity-grid article, .amenity-grid article.wide { grid-column: span 6; }
   .neighborhood figure { min-height: 520px; }
   .leasing-card { grid-template-columns: 1fr; }
+  .ask-katie-grid { grid-template-columns: 1fr; }
   .leasing-card aside { min-height: 460px; }
   .footer-grid { grid-template-columns: 1.5fr 1fr 1fr; }
   .footer-grid > div:first-child { grid-column: 1 / -1; }

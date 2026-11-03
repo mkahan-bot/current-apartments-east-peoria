@@ -31,3 +31,56 @@ test("renders The Current Apartments homepage", async () => {
   assert.match(html, /Join the Interest List/i);
   assert.match(html, /500 Centennial Drive/i);
 });
+
+async function loadWorker() {
+  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
+  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}-${Math.random()}`);
+  const { default: worker } = await import(workerUrl.href);
+  const env = { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } };
+  const ctx = { waitUntil() {}, passThroughOnException() {} };
+  return (request) => worker.fetch(request, env, ctx);
+}
+
+function postQuestion(body, headers = {}) {
+  return new Request("http://localhost/api/questions", {
+    method: "POST",
+    headers: { "content-type": "application/json", ...headers },
+    body: JSON.stringify(body),
+  });
+}
+
+const validQuestion = {
+  firstName: "Pat", lastName: "Lee", email: "pat@example.com", phone: "",
+  question: "Are cats allowed?", consent: "yes",
+};
+
+test("homepage renders the Ask Katie form", async () => {
+  const fetch = await loadWorker();
+  const html = await (await fetch(new Request("http://localhost/", { headers: { accept: "text/html" } }))).text();
+  assert.match(html, /id="ask-katie"/);
+  assert.match(html, /Send My Question/);
+  assert.match(html, /name="question"/);
+});
+
+test("Ask Katie rejects missing last name, bad email, short phone and missing consent", async () => {
+  const fetch = await loadWorker();
+  for (const patch of [{ lastName: "" }, { email: "nope" }, { phone: "123" }, { question: "" }, { consent: "" }]) {
+    const response = await fetch(postQuestion({ ...validQuestion, ...patch }));
+    assert.equal(response.status, 400, JSON.stringify(patch));
+    assert.ok((await response.json()).error);
+  }
+});
+
+test("Ask Katie quietly accepts honeypot submissions", async () => {
+  const fetch = await loadWorker();
+  const response = await fetch(postQuestion({ ...validQuestion, website: "spam.example" }));
+  assert.equal(response.status, 201);
+});
+
+test("Ask Katie allows CORS only from The Current's domains", async () => {
+  const fetch = await loadWorker();
+  const allowed = await fetch(new Request("http://localhost/api/questions", { method: "OPTIONS", headers: { origin: "https://thecurrent500.com" } }));
+  assert.equal(allowed.headers.get("access-control-allow-origin"), "https://thecurrent500.com");
+  const blocked = await fetch(new Request("http://localhost/api/questions", { method: "OPTIONS", headers: { origin: "https://evil.example" } }));
+  assert.equal(blocked.headers.get("access-control-allow-origin"), null);
+});
