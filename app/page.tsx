@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
+import AskKatieForm from "./ask-katie-form";
 
 const plans = {
   studio: {
@@ -125,7 +126,6 @@ export default function Home() {
         <nav className="desktop-nav" aria-label="Primary navigation">
           <a href="#story">Story</a><a href="#residences">Residences</a><a href="#amenities">Amenities</a><a href="#neighborhood">Neighborhood</a>
         </nav>
-        <a className="header-cta" href="#leasing">Join the Interest List</a>
         <button className="menu-button" type="button" aria-expanded={menuOpen} aria-label="Open navigation" onClick={() => setMenuOpen(!menuOpen)}><span /><span /><span /></button>
         {menuOpen && <nav className="mobile-menu" aria-label="Mobile navigation"><a onClick={() => setMenuOpen(false)} href="#story">Story</a><a onClick={() => setMenuOpen(false)} href="#residences">Residences</a><a onClick={() => setMenuOpen(false)} href="#amenities">Amenities</a><a onClick={() => setMenuOpen(false)} href="#neighborhood">Neighborhood</a><a onClick={() => setMenuOpen(false)} href="#leasing">Join the Interest List</a></nav>}
       </header>
@@ -137,7 +137,7 @@ export default function Home() {
           <span className="hero-kicker">A River Landmark Reborn</span>
           <h1>The Current</h1>
           <p>Honoring the past. Elevated for what comes next.</p>
-          <div className="hero-actions"><a className="button light" href="#residences">Explore Residences</a><a className="button ghost" href="#leasing">Join the Interest List</a></div>
+          <div className="hero-actions"><a className="button light" href="#residences">Explore Residences</a></div>
         </div>
         <div className="hero-meta"><span>500 Centennial Drive</span><span>East Peoria, Illinois</span><span>Now Pre-Leasing · Phase One</span></div>
       </section>
@@ -220,7 +220,9 @@ export default function Home() {
         </div>
       </section>
 
-      <footer><div className="footer-grid"><div><Mark inverse /><p>A river landmark reborn. Modern apartments on the Illinois River in East Peoria, Illinois.</p></div><div><h4>Explore</h4><a href="#story">Story</a><a href="#residences">Residences</a><a href="#amenities">Amenities</a><a href="#neighborhood">Neighborhood</a></div><div><h4>Visit</h4><a href="https://maps.google.com/?q=500+Centennial+Dr+East+Peoria+IL+61611" target="_blank" rel="noreferrer">500 Centennial Dr<br />East Peoria, IL 61611</a><a href="#leasing">Schedule a Tour</a></div><div><h4>Leasing</h4><a href="#leasing">Join the Interest List</a><a href="mailto:jake@hapropertymanagement.com">jake@hapropertymanagement.com</a><p>Now pre-leasing · Phase One</p></div></div><div className="footer-bottom"><span>© 2026 The Current Apartments · 500 Centennial LLC</span><span>Equal Housing Opportunity</span></div></footer>
+      <AskKatieForm />
+
+      <footer><div className="footer-grid"><div><Mark inverse /><p>A river landmark reborn. Modern apartments on the Illinois River in East Peoria, Illinois.</p></div><div><h4>Explore</h4><a href="#story">Story</a><a href="#residences">Residences</a><a href="#amenities">Amenities</a><a href="#neighborhood">Neighborhood</a></div><div><h4>Visit</h4><a href="https://maps.google.com/?q=500+Centennial+Dr+East+Peoria+IL+61611" target="_blank" rel="noreferrer">500 Centennial Dr<br />East Peoria, IL 61611</a><a href="#leasing">Schedule a Tour</a></div><div><h4>Leasing</h4><a href="#leasing">Join the Interest List</a><a href="#ask-katie">Ask Katie a Question</a><a href="mailto:jake@hapropertymanagement.com">jake@hapropertymanagement.com</a><p>Now pre-leasing · Phase One</p></div></div><div className="footer-bottom"><span>© 2026 The Current Apartments · 500 Centennial LLC</span><span>Equal Housing Opportunity</span></div></footer>
 
       <nav className="mobile-dock" aria-label="Quick navigation"><a href="#residences">Homes</a><a href="#amenities">Amenities</a><a href="#neighborhood">Area</a><a className="active" href="#leasing">Tour</a></nav>
     </main>

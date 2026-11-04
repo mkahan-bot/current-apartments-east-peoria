@@ -4,6 +4,12 @@ const LEASING_EMAILS = [
   "jake@hapropertymanagement.com",
   "avromi@haproperties.co",
 ];
+// "Ask Katie" questions (formType "question") go here instead of the leasing list.
+const QUESTIONS_SHEET_NAME = "Questions";
+const QUESTION_EMAILS = [
+  "jd@geula.ai",
+  "knewell@hapropertymanagement.com",
+];
 
 function doPost(event) {
   try {
@@ -11,6 +17,10 @@ function doPost(event) {
     const expectedSecret = PropertiesService.getScriptProperties().getProperty("LEAD_WEBHOOK_SECRET") || "";
     if (expectedSecret && lead.integrationSecret !== expectedSecret) {
       return jsonResponse({ ok: false, error: "Unauthorized" });
+    }
+
+    if (lead.formType === "question") {
+      return handleQuestion(lead);
     }
 
     const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
@@ -61,6 +71,63 @@ function doPost(event) {
   } catch (error) {
     return jsonResponse({ ok: false, error: String(error) });
   }
+}
+
+function handleQuestion(inquiry) {
+  const contact = inquiry.contact || {};
+  const context = inquiry.context || {};
+  const question = (inquiry.question && inquiry.question.text) || "";
+  const name = [contact.firstName, contact.lastName].filter(Boolean).join(" ");
+
+  const book = SpreadsheetApp.openById(SPREADSHEET_ID);
+  let sheet = book.getSheetByName(QUESTIONS_SHEET_NAME);
+  if (!sheet) {
+    sheet = book.insertSheet(QUESTIONS_SHEET_NAME);
+    sheet.appendRow(["Submitted At", "Inquiry ID", "First Name", "Last Name", "Email", "Phone", "Question", "Page", "UTM", "Status", "Funnel Stage", "Answer", "AppFolio Prospect ID", "Raw JSON"]);
+  }
+  sheet.appendRow([
+    inquiry.submittedAt || new Date().toISOString(),
+    inquiry.inquiryId || "",
+    contact.firstName || "",
+    contact.lastName || "",
+    contact.email || "",
+    contact.phone || "",
+    question,
+    context.pageUrl || "",
+    JSON.stringify(context.utm || {}),
+    "New",
+    "Inquiry",
+    "",
+    "",
+    JSON.stringify(Object.assign({}, inquiry, { integrationSecret: undefined })),
+  ]);
+
+  const body = [
+    "A prospect sent a question through \"Ask Katie\" on The Current Apartments website.",
+    "Reply to this email to answer them directly.",
+    "",
+    `Name: ${name}`,
+    `Email: ${contact.email || ""}`,
+    `Phone: ${contact.phone || "Not provided"}`,
+    `OK to contact about leasing: ${inquiry.consent && inquiry.consent.contact === false ? "NO (opted out, answer the question only)" : "Yes"}`,
+    "",
+    "Question:",
+    question,
+    "",
+    `Page: ${context.pageUrl || ""}`,
+    `Inquiry ID: ${inquiry.inquiryId || ""}`,
+    "",
+    "--- structured payload (ask-katie.v1) ---",
+    JSON.stringify(Object.assign({}, inquiry, { integrationSecret: undefined }), null, 2),
+  ].join("\n");
+
+  MailApp.sendEmail({
+    to: QUESTION_EMAILS.join(","),
+    subject: `Ask Katie — question from ${name || contact.email}`,
+    body: body,
+    replyTo: contact.email || QUESTION_EMAILS[0],
+  });
+  return jsonResponse({ ok: true });
 }
 
 function jsonResponse(value) {
