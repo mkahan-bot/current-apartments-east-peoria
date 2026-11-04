@@ -1,6 +1,6 @@
 # "Ask Katie" form
 
-For prospects who aren't ready to apply or schedule a tour. Fields: first name, last name, email, optional phone, question, and a reply-consent checkbox.
+For prospects who aren't ready to apply or schedule a tour. Fields: first name, last name, email, optional phone, question, and a pre-checked "I agree to be contacted by a leasing agent" box (unchecking it opts out of sales follow-up; the question is still answered).
 
 ## Where it lives
 
@@ -11,7 +11,7 @@ For prospects who aren't ready to apply or schedule a tour. Fields: first name, 
 
 1. `POST /api/questions` validates and stores the question in D1 (`prospect_questions`).
 2. It forwards the structured payload to `QUESTION_WEBHOOK_URL` (falls back to `LEAD_WEBHOOK_URL`).
-3. The Google Apps Script bridge sees `formType: "question"`, logs it to a **Questions** tab, and emails `jd@geula.ai` with the prospect as Reply-To.
+3. The Google Apps Script bridge sees `formType: "question"`, logs it to a **Questions** tab, and emails `jd@geula.ai` and `knewell@hapropertymanagement.com` with the prospect as Reply-To.
 
 ## Payload (`ask-katie.v1`)
 
@@ -26,7 +26,7 @@ For prospects who aren't ready to apply or schedule a tour. Fields: first name, 
   "question": { "text": "" },
   "context": { "pageUrl": "", "referrer": "", "utm": { "utm_source": "" } },
   "routing": { "assignedTo": "Katie", "source": "Website - Ask Katie", "funnelStage": "Inquiry", "status": "New" },
-  "consent": { "contact": true, "consentAt": "" }
+  "consent": { "contact": true, "consentAt": "" }  // contact=false when the prospect unchecks the box
 }
 ```
 

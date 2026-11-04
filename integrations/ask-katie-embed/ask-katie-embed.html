@@ -26,12 +26,13 @@
     .ak .ak-error{margin:0;padding:12px;background:#fff1f1;color:#8c2b2b;font-size:13px}
     .ak .ak-done{background:#fff;padding:40px;box-shadow:0 18px 50px rgba(8,35,56,.12)}
     .ak a{color:var(--ak-accent);font-weight:700}
+    .ak .ak-call{font-size:clamp(18px,4vw,22px)}
     @media (max-width:520px){.ak .ak-row{grid-template-columns:1fr}}
   </style>
 
-  <span class="ak-eyebrow">Not ready to apply or tour?</span>
   <h2>Ask Katie anything.</h2>
-  <p>Send a question to Katie on our leasing team and get an answer by email. No application, no appointment. Prefer to talk? Call <a href="tel:+13092105904">309-210-5904</a>.</p>
+  <p>Have a question about pets, parking, utilities, move-in timing, or anything else?</p>
+  <p class="ak-call">Prefer to talk? Call <a href="tel:+13092105904">309-210-5904</a>, <span style="white-space:nowrap">10 a.m.–5 p.m.</span></p>
 
   <form id="ak-form" novalidate>
     <div class="ak-row">
@@ -42,9 +43,9 @@
     <label>Phone <small>(optional)</small><input name="phone" type="tel" autocomplete="tel" maxlength="40"></label>
     <label>Your question<textarea name="question" rows="5" required minlength="3" maxlength="2000" placeholder="e.g. Are cats allowed? What utilities are included?"></textarea></label>
     <label class="ak-hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
-    <label class="ak-consent"><input name="consent" type="checkbox" value="yes" required><span>I agree that The Current Apartments may reply to my question and follow up about leasing by email, or by phone if I provided one.</span></label>
+    <label class="ak-consent"><input name="consent" type="checkbox" value="yes" checked><span>I agree to be contacted by a leasing agent at The Current Apartments</span></label>
     <p class="ak-error" id="ak-error" role="alert" hidden></p>
-    <button type="submit">Send my question</button>
+    <button type="submit">Submit</button>
   </form>
   <div class="ak-done" id="ak-done" hidden>
     <h2>Question sent.</h2>
@@ -70,7 +71,6 @@
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(get("email"))) return fail("Please enter a valid email address so Katie can reply.");
       if (get("phone") && get("phone").replace(/\D/g, "").length < 10) return fail("Please check your phone number, or leave it blank.");
       if (get("question").length < 3) return fail("Please type your question.");
-      if (get("consent") !== "yes") return fail("Please confirm that we may reply to you.");
 
       var params = new URLSearchParams(location.search), utm = {};
       UTM.forEach(function (k) { if (params.get(k)) utm[k] = params.get(k); });
@@ -93,7 +93,7 @@
         });
       }).catch(function (e2) {
         fail((e2 && e2.message) || "We could not send your question. Please call 309-210-5904.");
-        btn.disabled = false; btn.textContent = "Send my question";
+        btn.disabled = false; btn.textContent = "Submit";
       });
     });
   })();

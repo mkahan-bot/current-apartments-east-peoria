@@ -38,7 +38,8 @@ export type QuestionPayload = {
   question: { text: string };
   context: { pageUrl: string; referrer: string; utm: Record<string, string> };
   routing: { assignedTo: string; source: string; funnelStage: string; status: string };
-  consent: { contact: true; consentAt: string };
+  // contact=false means the prospect unchecked the pre-checked box: answer the question, but no sales follow-up.
+  consent: { contact: boolean; consentAt: string };
 };
 
 export function clean(value: unknown, max = 500) {
@@ -62,7 +63,7 @@ export function cleanUtm(value: unknown): Record<string, string> {
 }
 
 export type ValidationResult =
-  | { ok: true; spam: false; fields: Omit<QuestionPayload, "inquiryId" | "submittedAt" | "consent" | "schemaVersion" | "formType" | "property" | "routing"> }
+  | { ok: true; spam: false; contactConsent: boolean; fields: Omit<QuestionPayload, "inquiryId" | "submittedAt" | "consent" | "schemaVersion" | "formType" | "property" | "routing"> }
   | { ok: true; spam: true }
   | { ok: false; error: string };
 
@@ -79,11 +80,11 @@ export function validateQuestion(input: QuestionInput): ValidationResult {
   if (!validEmail(email)) return { ok: false, error: "Please enter a valid email address so Katie can reply." };
   if (phone && phone.replace(/\D/g, "").length < 10) return { ok: false, error: "Please check your phone number, or leave it blank." };
   if (question.length < 3) return { ok: false, error: "Please type your question." };
-  if (clean(input.consent, 10) !== "yes") return { ok: false, error: "Please confirm that we may reply to you." };
 
   return {
     ok: true,
     spam: false,
+    contactConsent: clean(input.consent, 10) === "yes",
     fields: {
       contact: { firstName, lastName, email, phone },
       question: { text: question },

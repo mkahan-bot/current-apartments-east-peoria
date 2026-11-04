@@ -28,7 +28,7 @@ test("renders The Current Apartments homepage", async () => {
   );
   const html = await response.text();
   assert.match(html, /<title>The Current Apartments \| East Peoria, IL<\/title>/i);
-  assert.match(html, /Join the Interest List/i);
+  assert.match(html, /Join the Interest List/i); // leasing form submit button stays
   assert.match(html, /500 Centennial Drive/i);
 });
 
@@ -58,13 +58,15 @@ test("homepage renders the Ask Katie form", async () => {
   const fetch = await loadWorker();
   const html = await (await fetch(new Request("http://localhost/", { headers: { accept: "text/html" } }))).text();
   assert.match(html, /id="ask-katie"/);
-  assert.match(html, /Send My Question/);
+  assert.match(html, />Submit</);
+  assert.match(html, /I agree to be contacted by a leasing agent at The Current Apartments/);
+  assert.doesNotMatch(html, /Not ready to apply or tour/);
   assert.match(html, /name="question"/);
 });
 
-test("Ask Katie rejects missing last name, bad email, short phone and missing consent", async () => {
+test("Ask Katie rejects missing last name, bad email, short phone and empty question", async () => {
   const fetch = await loadWorker();
-  for (const patch of [{ lastName: "" }, { email: "nope" }, { phone: "123" }, { question: "" }, { consent: "" }]) {
+  for (const patch of [{ lastName: "" }, { email: "nope" }, { phone: "123" }, { question: "" }]) {
     const response = await fetch(postQuestion({ ...validQuestion, ...patch }));
     assert.equal(response.status, 400, JSON.stringify(patch));
     assert.ok((await response.json()).error);

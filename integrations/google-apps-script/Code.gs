@@ -8,6 +8,7 @@ const LEASING_EMAILS = [
 const QUESTIONS_SHEET_NAME = "Questions";
 const QUESTION_EMAILS = [
   "jd@geula.ai",
+  "knewell@hapropertymanagement.com",
 ];
 
 function doPost(event) {
@@ -108,6 +109,7 @@ function handleQuestion(inquiry) {
     `Name: ${name}`,
     `Email: ${contact.email || ""}`,
     `Phone: ${contact.phone || "Not provided"}`,
+    `OK to contact about leasing: ${inquiry.consent && inquiry.consent.contact === false ? "NO (opted out, answer the question only)" : "Yes"}`,
     "",
     "Question:",
     question,

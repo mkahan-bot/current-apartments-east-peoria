@@ -45,10 +45,9 @@ export default function AskKatieForm() {
     <section id="ask-katie" className="section paper ask-katie">
       <div className="ask-katie-grid">
         <div className="section-copy">
-          <span className="eyebrow">Not ready to apply or tour?</span>
           <h2>Ask Katie<br />anything.</h2>
-          <p className="lead">Have a question about pets, parking, utilities, move-in timing, or anything else? Send it to Katie on our leasing team and you’ll get an answer by email. No application, no appointment.</p>
-          <p className="fine">Prefer to talk? Call <a href="tel:+13092105904">309-210-5904</a>, 10 a.m.–5 p.m.</p>
+          <p className="lead">Have a question about pets, parking, utilities, move-in timing, or anything else?</p>
+          <p className="ask-katie-call">Prefer to talk? Call <a href="tel:+13092105904">309-210-5904</a>, <span style={{ whiteSpace: "nowrap" }}>10 a.m.–5 p.m.</span></p>
         </div>
         <div className="leasing-card ask-katie-card">
           {state === "success" ? (
@@ -60,9 +59,9 @@ export default function AskKatieForm() {
               <label>Phone <small>(optional)</small><input name="phone" type="tel" autoComplete="tel" maxLength={40} /></label>
               <label>Your Question<textarea name="question" rows={5} required minLength={3} maxLength={2000} placeholder="e.g. Are cats allowed? What utilities are included?" /></label>
               <label className="honeypot" aria-hidden="true">Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
-              <label className="consent"><input name="consent" type="checkbox" value="yes" required /><span>I agree that The Current Apartments may reply to my question and follow up about leasing by email, or by phone if I provided one.</span></label>
+              <label className="consent"><input name="consent" type="checkbox" value="yes" defaultChecked /><span>I agree to be contacted by a leasing agent at The Current Apartments</span></label>
               {state === "error" && <p className="form-error" role="alert">{message}</p>}
-              <button className="button dark submit" type="submit" disabled={state === "submitting"}>{state === "submitting" ? "Sending…" : "Send My Question"}</button>
+              <button className="button dark submit" type="submit" disabled={state === "submitting"}>{state === "submitting" ? "Sending…" : "Submit"}</button>
             </form>
           )}
         </div>

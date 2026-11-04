@@ -126,7 +126,6 @@ export default function Home() {
         <nav className="desktop-nav" aria-label="Primary navigation">
           <a href="#story">Story</a><a href="#residences">Residences</a><a href="#amenities">Amenities</a><a href="#neighborhood">Neighborhood</a>
         </nav>
-        <a className="header-cta" href="#leasing">Join the Interest List</a>
         <button className="menu-button" type="button" aria-expanded={menuOpen} aria-label="Open navigation" onClick={() => setMenuOpen(!menuOpen)}><span /><span /><span /></button>
         {menuOpen && <nav className="mobile-menu" aria-label="Mobile navigation"><a onClick={() => setMenuOpen(false)} href="#story">Story</a><a onClick={() => setMenuOpen(false)} href="#residences">Residences</a><a onClick={() => setMenuOpen(false)} href="#amenities">Amenities</a><a onClick={() => setMenuOpen(false)} href="#neighborhood">Neighborhood</a><a onClick={() => setMenuOpen(false)} href="#leasing">Join the Interest List</a></nav>}
       </header>
@@ -138,7 +137,7 @@ export default function Home() {
           <span className="hero-kicker">A River Landmark Reborn</span>
           <h1>The Current</h1>
           <p>Honoring the past. Elevated for what comes next.</p>
-          <div className="hero-actions"><a className="button light" href="#residences">Explore Residences</a><a className="button ghost" href="#leasing">Join the Interest List</a></div>
+          <div className="hero-actions"><a className="button light" href="#residences">Explore Residences</a></div>
         </div>
         <div className="hero-meta"><span>500 Centennial Drive</span><span>East Peoria, Illinois</span><span>Now Pre-Leasing · Phase One</span></div>
       </section>

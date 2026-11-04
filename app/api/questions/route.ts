@@ -47,7 +47,7 @@ export async function POST(request: Request) {
     property: { name: "The Current Apartments", address: "500 Centennial Drive, East Peoria, IL 61611" },
     ...result.fields,
     routing: { assignedTo: "Katie", source: QUESTION_SOURCE, funnelStage: "Inquiry", status: "New" },
-    consent: { contact: true, consentAt: submittedAt },
+    consent: { contact: result.contactConsent, consentAt: result.contactConsent ? submittedAt : "" },
   };
 
   try {
